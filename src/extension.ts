@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import {MDReader} from './markdown-reader';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -14,34 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 }
 
-class MDReader {
 
-	public readMarkdown() {
-		let editor = vscode.window.activeTextEditor; 
-		if(!editor){ 
-			return;
-		}
-
-		let doc = editor.document; 
-
-		if(doc.languageId === "markdown") {
-			let sample = this._sample(doc);
-			vscode.window.showInformationMessage(sample);
-		} else {
-			vscode.window.showInformationMessage("Only Markdown is available");
-		}
-		return;
-	}
-
-	public _sample(doc: vscode.TextDocument): string {
-		console.log("sample");
-		return 'hi';
-	} 
-
-	dispose() {
-		
-	}
-}
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
