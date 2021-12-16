@@ -1,18 +1,21 @@
 import * as vscode from 'vscode';
-import {MDReader} from './markdown-reader';
+import {ConversionProvider} from './conversionProvider';
 
 export function activate(context: vscode.ExtensionContext) {
 
 	console.log('Congratulations, your extension "markdown-to-jsx" is now active!');
 
-	let mdReader = new MDReader();
+	let conversionProvider = new ConversionProvider();
 
-	let disposable = vscode.commands.registerCommand('markdown-to-jsx.convertToJSX', () => {
-		mdReader.readMarkdown();
-	});
+	context.subscriptions.push(conversionProvider);
 
-	context.subscriptions.push(mdReader);
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(vscode.commands.registerCommand('markdown-to-jsx.convertToJSX', () => {
+		conversionProvider.handleFile('jsx');
+	}));
+
+	context.subscriptions.push(vscode.commands.registerCommand('markdown-to-jsx.convertToHtml', () => {
+		conversionProvider.handleFile('html');
+	}));
 }
 
 

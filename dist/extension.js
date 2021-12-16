@@ -9,50 +9,113 @@ module.exports = require("vscode");
 
 /***/ }),
 /* 2 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ConversionProvider": () => (/* binding */ ConversionProvider)
+/* harmony export */ });
+/* harmony import */ var vscode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var vscode__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vscode__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_services_export__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
 
 
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MDReader = void 0;
-const vscode = __webpack_require__(1);
-const fs = __webpack_require__(4);
-const html_parser_1 = __webpack_require__(3);
-class MDReader {
-    readMarkdown() {
-        let editor = vscode.window.activeTextEditor;
+class ConversionProvider {
+    handleFile(func) {
+        let editor = vscode__WEBPACK_IMPORTED_MODULE_0__.window.activeTextEditor;
         if (!editor) {
             return;
         }
-        let path = vscode.window.activeTextEditor?.document.uri.path;
+        let path = vscode__WEBPACK_IMPORTED_MODULE_0__.window.activeTextEditor.document.uri.path;
         let doc = editor.document;
         if (doc.languageId === "markdown") {
-            let sample = this._sample(doc, path);
-            vscode.window.showInformationMessage(sample);
+            switch (func) {
+                case 'html': {
+                    this._convertHtml(path, doc);
+                    return;
+                }
+                case 'jsx': {
+                    this._convertJSX(path, doc);
+                }
+                default: {
+                    return;
+                }
+            }
         }
         else {
-            vscode.window.showInformationMessage("Only Markdown is available");
+            vscode__WEBPACK_IMPORTED_MODULE_0__.window.showErrorMessage("Only Markdown is available");
         }
         return;
     }
-    _sample(doc, path) {
-        if (path) {
-            fs.writeFileSync(path.split('.')[0] + ".html", (0, html_parser_1.htmlParser)(doc.getText()), 'utf8');
-        }
-        return (0, html_parser_1.htmlParser)(doc.getText());
+    _convertHtml(path, doc) {
+        (0,_lib_services_export__WEBPACK_IMPORTED_MODULE_1__.exportHtml)(path, doc);
+    }
+    _convertJSX(path, doc) {
+        (0,_lib_services_export__WEBPACK_IMPORTED_MODULE_1__.exportJSX)(path, doc);
     }
     dispose() {
     }
 }
-exports.MDReader = MDReader;
 
 
 /***/ }),
 /* 3 */
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "exportHtml": () => (/* binding */ exportHtml),
+/* harmony export */   "exportJSX": () => (/* binding */ exportJSX)
+/* harmony export */ });
+/* harmony import */ var vscode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var vscode__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vscode__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _html_parser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
+/* harmony import */ var _jsx_parser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(16);
 
 
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.htmlParser = void 0;
+
+
+function exportHtml(path, data) {
+    try {
+        if (path) {
+            fs__WEBPACK_IMPORTED_MODULE_1__.writeFileSync(path.split('.')[0] + ".html", (0,_html_parser__WEBPACK_IMPORTED_MODULE_2__.htmlParser)(data.getText()), 'utf8');
+            vscode__WEBPACK_IMPORTED_MODULE_0__.window.showInformationMessage("Export Html Completed successfully");
+        }
+    }
+    catch (err) {
+        vscode__WEBPACK_IMPORTED_MODULE_0__.window.showErrorMessage("Error Occurred while exporting html file");
+    }
+}
+function exportJSX(path, data) {
+    try {
+        if (path) {
+            let parsedHtml = (0,_html_parser__WEBPACK_IMPORTED_MODULE_2__.htmlParser)(data.getText());
+            let parsedJSX = _jsx_parser__WEBPACK_IMPORTED_MODULE_3__.importSection + (0,_jsx_parser__WEBPACK_IMPORTED_MODULE_3__.renderSection)(parsedHtml);
+            fs__WEBPACK_IMPORTED_MODULE_1__.writeFileSync(path.split('.')[0] + ".jsx", parsedJSX, 'utf8');
+        }
+    }
+    catch (err) {
+        vscode__WEBPACK_IMPORTED_MODULE_0__.window.showErrorMessage("Error Occurred while exporting JSX file");
+    }
+}
+
+
+/***/ }),
+/* 4 */
+/***/ ((module) => {
+
+module.exports = require("fs");
+
+/***/ }),
+/* 5 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "htmlParser": () => (/* binding */ htmlParser)
+/* harmony export */ });
 function htmlParser(md) {
     //ul
     md = md.replace(/^\s*\n\*/gm, '<ul>\n*');
@@ -95,14 +158,36 @@ function htmlParser(md) {
     md = md.replace(/(\<pre.+\>)\s*\n\<p\>(.+)\<\/p\>/gm, '$1$2');
     return md;
 }
-exports.htmlParser = htmlParser;
 
 
 /***/ }),
-/* 4 */
-/***/ ((module) => {
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */,
+/* 12 */,
+/* 13 */,
+/* 14 */,
+/* 15 */,
+/* 16 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-module.exports = require("fs");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "importSection": () => (/* binding */ importSection),
+/* harmony export */   "renderSection": () => (/* binding */ renderSection)
+/* harmony export */ });
+const importSection = `import React from 'react';\n`;
+function renderSection(code) {
+    return `export default function Output() {
+    return (
+      <div>${code}</div>
+    )
+  }`;
+}
+
 
 /***/ })
 /******/ 	]);
@@ -132,28 +217,73 @@ module.exports = require("fs");
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-var exports = __webpack_exports__;
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "activate": () => (/* binding */ activate),
+/* harmony export */   "deactivate": () => (/* binding */ deactivate)
+/* harmony export */ });
+/* harmony import */ var vscode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var vscode__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vscode__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _conversionProvider__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(2);
 
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deactivate = exports.activate = void 0;
-const vscode = __webpack_require__(1);
-const markdown_reader_1 = __webpack_require__(2);
+
 function activate(context) {
     console.log('Congratulations, your extension "markdown-to-jsx" is now active!');
-    let mdReader = new markdown_reader_1.MDReader();
-    let disposable = vscode.commands.registerCommand('markdown-to-jsx.convertToJSX', () => {
-        mdReader.readMarkdown();
-    });
-    context.subscriptions.push(mdReader);
-    context.subscriptions.push(disposable);
+    let conversionProvider = new _conversionProvider__WEBPACK_IMPORTED_MODULE_1__.ConversionProvider();
+    context.subscriptions.push(conversionProvider);
+    context.subscriptions.push(vscode__WEBPACK_IMPORTED_MODULE_0__.commands.registerCommand('markdown-to-jsx.convertToJSX', () => {
+        conversionProvider.handleFile('jsx');
+    }));
+    context.subscriptions.push(vscode__WEBPACK_IMPORTED_MODULE_0__.commands.registerCommand('markdown-to-jsx.convertToHtml', () => {
+        conversionProvider.handleFile('html');
+    }));
 }
-exports.activate = activate;
 // this method is called when your extension is deactivated
 function deactivate() { }
-exports.deactivate = deactivate;
 
 })();
 
