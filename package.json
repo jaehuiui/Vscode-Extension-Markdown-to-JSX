@@ -2,6 +2,7 @@
   "name": "markdown-to-jsx",
   "displayName": "markdown-to-jsx",
   "description": "Convert Markdown file to React JSX",
+  "publisher": "Jaehuiui",
   "version": "1.0.0",
   "author": {
     "name": "jaehuiui"
@@ -12,6 +13,9 @@
   "categories": [
     "Other"
   ],
+  "repository": {
+    "git": "https://github.com/jaehuiui/Vscode-Extension-Markdown-to-JSX"
+  },
   "activationEvents": [
     "onCommand:markdown-to-jsx.initialize",
     "onCommand:markdown-to-jsx.convertToJSX",
