@@ -293,47 +293,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "htmlParser": () => (/* binding */ htmlParser)
 /* harmony export */ });
+/* harmony import */ var _utils_regex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
+/* harmony import */ var _utils_tag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
+
+
 function htmlParser(md) {
-    //ul
-    md = md.replace(/^\s*\n\*/gm, '<ul>\n*');
-    md = md.replace(/^(\*.+)\s*\n([^\*])/gm, '$1\n</ul>\n\n$2');
-    md = md.replace(/^\*(.+)/gm, '<li>$1</li>');
-    //ol
-    md = md.replace(/^\s*\n\d\./gm, '<ol>\n1.');
-    md = md.replace(/^(\d\..+)\s*\n([^\d\.])/gm, '$1\n</ol>\n\n$2');
-    md = md.replace(/^\d\.(.+)/gm, '<li>$1</li>');
-    //blockquote
-    md = md.replace(/^\>(.+)/gm, '<blockquote>$1</blockquote>');
-    //h
-    md = md.replace(/[\#]{6}(.+)/g, '<h6>$1</h6>');
-    md = md.replace(/[\#]{5}(.+)/g, '<h5>$1</h5>');
-    md = md.replace(/[\#]{4}(.+)/g, '<h4>$1</h4>');
-    md = md.replace(/[\#]{3}(.+)/g, '<h3>$1</h3>');
-    md = md.replace(/[\#]{2}(.+)/g, '<h2>$1</h2>');
-    md = md.replace(/[\#]{1}(.+)/g, '<h1>$1</h1>');
-    //alt h
-    md = md.replace(/^(.+)\n\=+/gm, '<h1>$1</h1>');
-    md = md.replace(/^(.+)\n\-+/gm, '<h2>$1</h2>');
-    //images
-    md = md.replace(/\!\[([^\]]+)\]\(([^\)]+)\)/g, '<img src="$2" alt="$1" />');
-    //links
-    md = md.replace(/[\[]{1}([^\]]+)[\]]{1}[\(]{1}([^\)\"]+)(\"(.+)\")?[\)]{1}/g, '<a href="$2" title="$4">$1</a>');
-    //font styles
-    md = md.replace(/[\*\_]{2}([^\*\_]+)[\*\_]{2}/g, '<b>$1</b>');
-    md = md.replace(/[\*\_]{1}([^\*\_]+)[\*\_]{1}/g, '<i>$1</i>');
-    md = md.replace(/[\~]{2}([^\~]+)[\~]{2}/g, '<del>$1</del>');
-    //pre
-    md = md.replace(/^\s*\n\`\`\`(([^\s]+))?/gm, '<pre class="$2">');
-    md = md.replace(/^\`\`\`\s*\n/gm, '</pre>\n\n');
-    //code
-    md = md.replace(/[\`]{1}([^\`]+)[\`]{1}/g, '<code>$1</code>');
-    //p
-    md = md.replace(/^\s*(\n)?(.+)/gm, function (m) {
-        return /\<(\/)?(h\d|ul|ol|li|blockquote|pre|img)/.test(m) ? m : '<p>' + m + '</p>';
-    });
-    //strip p from pre
-    md = md.replace(/(\<pre.+\>)\s*\n\<p\>(.+)\<\/p\>/gm, '$1$2');
-    return md;
+    for (const tag of _utils_tag__WEBPACK_IMPORTED_MODULE_1__.tagList) {
+        md = md.replace(_utils_regex__WEBPACK_IMPORTED_MODULE_0__.regex[tag], _utils_tag__WEBPACK_IMPORTED_MODULE_1__.toHtml[tag]);
+    }
+    return md.trim();
 }
 
 
@@ -344,8 +312,69 @@ function htmlParser(md) {
 module.exports = require("path");
 
 /***/ }),
-/* 7 */,
-/* 8 */,
+/* 7 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "regex": () => (/* binding */ regex)
+/* harmony export */ });
+const regex = {
+    h1: /^# (.*$)/gim,
+    h2: /^## (.*$)/gim,
+    h3: /^### (.*$)/gim,
+    h4: /^#### (.*$)/gim,
+    h5: /^##### (.*$)/gim,
+    h6: /^###### (.*$)/gim,
+    b: /\*\*(.*)\*\*/gim,
+    i: /\*(.*)\*/gim,
+    br: /\n$/gim,
+    a: /\[(.*?)\]\((.*?)\)/gim,
+    bq: /^\> (.*$)/gim,
+    img: /!\[(.*?)\]\((.*?)\)/gim,
+};
+
+
+/***/ }),
+/* 8 */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "tagList": () => (/* binding */ tagList),
+/* harmony export */   "toHtml": () => (/* binding */ toHtml)
+/* harmony export */ });
+const tagList = [
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "b",
+    "i",
+    "br",
+    "a",
+    "bq",
+    "img",
+];
+const toHtml = {
+    h1: "<h1>$1</h1>",
+    h2: "<h2>$1</h2>",
+    h3: "<h3>$1</h3>",
+    h4: "<h4>$1</h4>",
+    h5: "<h5>$1</h5>",
+    h6: "<h6>$1</h6>",
+    b: "<b>$1</b>",
+    i: "<i>$1</i>",
+    br: "<br/>",
+    a: "<a href='$2'>$1</a>",
+    bq: "<blockquote>$1</blockquote>",
+    img: "<img alt='$1' src='$2' />",
+};
+
+
+/***/ }),
 /* 9 */,
 /* 10 */,
 /* 11 */,
