@@ -1,28 +1,38 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import { htmlParser } from './html-parser';
-import {importSection, renderSection} from './jsx-parser';
+import * as vscode from "vscode";
+import * as fs from "fs";
+import { htmlParser } from "./html-parser";
+import { importSection, renderSection } from "./jsx-parser";
 
-
-export function exportHtml(path: string | undefined, data: vscode.TextDocument): void {
+export function exportHtml(
+  path: string | undefined,
+  data: vscode.TextDocument
+): string | undefined {
   try {
-    if(path) {
-      fs.writeFileSync(path.split('.')[0] + ".html", htmlParser(data.getText()), 'utf8');
-      vscode.window.showInformationMessage("Export Html Completed successfully");
+    if (path) {
+      vscode.window.showInformationMessage(
+        "Export Html Completed successfully"
+      );
+      return htmlParser(data.getText());
+      // fs.writeFileSync(path.split('.')[0] + ".html", htmlParser(data.getText()), 'utf8');
     }
   } catch (err) {
     vscode.window.showErrorMessage("Error Occurred while exporting html file");
   }
+  return undefined;
 }
 
-export function exportJSX(path: string | undefined, data: vscode.TextDocument): void {
+export function exportJSX(
+  path: string | undefined,
+  data: vscode.TextDocument
+): string | undefined {
   try {
-    if(path) {
+    if (path) {
       let parsedHtml = htmlParser(data.getText());
-      let parsedJSX = importSection + renderSection(parsedHtml);
-      fs.writeFileSync(path.split('.')[0] + ".jsx", parsedJSX, 'utf8');
+      return importSection + renderSection(parsedHtml);
+      // fs.writeFileSync(path.split(".")[0] + ".jsx", parsedJSX, "utf8");
     }
   } catch (err) {
     vscode.window.showErrorMessage("Error Occurred while exporting JSX file");
   }
+  return undefined;
 }
